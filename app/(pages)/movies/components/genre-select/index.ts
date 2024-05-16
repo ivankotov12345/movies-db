@@ -1,0 +1,1 @@
+export { GenreSelect } from './genre-select';

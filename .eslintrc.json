@@ -1,3 +1,43 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next", "prettier"],
+  "rules": {
+    "no-console": "warn",
+    "semi": ["warn", "always"],
+    "quotes": ["warn", "single"],
+    "jsx-quotes": ["warn", "prefer-single"],
+    "no-unused-vars": "warn",
+    "react/react-in-jsx-scope": "off",
+    "import/order": ["warn", {
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+      "pathGroups": [
+        {
+          "pattern": "react",
+          "group": "external",
+          "position": "before"
+        },
+        {
+          "pattern": "react-dom",
+          "group": "external",
+          "position": "before"
+        },
+        {
+          "pattern": "**/*.module.scss",
+          "group": "unknown",
+          "position": "after"
+        }
+      ],
+      "alphabetize": {
+        "order": "asc",
+        "caseInsensitive": true
+      }
+    }]
+  },
+  "overrides": [
+    {
+      "files": ["app/types/**"],
+      "rules": {
+        "no-unused-vars": "off"
+      }
+    }
+  ]
 }

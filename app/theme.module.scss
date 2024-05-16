@@ -1,0 +1,48 @@
+@use './scss/index' as *;
+
+.input {
+    border-radius: $radius-small;
+    
+    &:focus-within {
+        outline: $focus-border;
+        border-color: transparent;
+    }
+}
+
+.label {
+    padding-bottom: $spacing-small;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    line-height: 140%;
+}
+
+.dropdown {
+    padding: $spacing-option;
+    border-radius: $radius-small;
+}
+
+.option {
+    &:hover {
+        background: $purple-100;
+    }
+
+    &[data-combobox-active] {
+        background: $purple-main-500;
+        border-radius: $radius-small;
+        color: $color-white;
+    }
+}
+
+.controls {
+    height: auto;
+}
+
+.control {
+    border: none;
+    stroke-width: 1.5;
+    stroke: $color-grey-500;
+
+    &:hover {
+        background: transparent;
+    }
+}
