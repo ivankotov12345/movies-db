@@ -1,0 +1,1 @@
+export { NoImagePlaceholder } from './no-image-placeholder';

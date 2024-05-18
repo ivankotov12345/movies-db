@@ -40,7 +40,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 src={logo}
                 alt='website logo'
               />
-              <Text span size='xl' fw={FONT_WEIGHT_LOGO}>
+              <Text span size='lg' fw={FONT_WEIGHT_LOGO}>
                 ArrowFlicks
               </Text>
             </Group>
@@ -51,7 +51,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                   active={index === activeLink}
                   href={path}
                   label={
-                  <Text size='lg' fw={FONT_WEIGHT_BOLD}>{link}</Text>
+                  <Text fw={FONT_WEIGHT_BOLD}>{link}</Text>
                   }
                   key={link}
                   onClick={() => setActiveLink(index)}

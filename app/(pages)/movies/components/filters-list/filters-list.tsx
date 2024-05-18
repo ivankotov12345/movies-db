@@ -18,7 +18,7 @@ export const FiltersList: React.FC<FiltersListProps> = ({ genres }) => {
     <Fragment>
       <Group gap='md' wrap='nowrap' align='end'>
         <SimpleGrid cols={3}>
-        <GenreSelect />
+        <GenreSelect genres={genres} />
 
         <YearPickerInput
           size='md'
@@ -49,7 +49,6 @@ export const FiltersList: React.FC<FiltersListProps> = ({ genres }) => {
 
         <Box w='81px'>
         <Button
-          size='md'
           variant='transparent'
           p={0}
           fw={FONT_WEIGHT_RESET}

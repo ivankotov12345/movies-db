@@ -3,14 +3,14 @@ import { IconChevronDown } from '@tabler/icons-react';
 import { useState } from 'react';
 import { GenreType } from '@app/types/types/response-types';
 
-type PropsType = {
+type GenreSelectProps = {
   genres: GenreType[],
 }
 
 const { Target, Dropdown, Option } = Combobox;
 const { Placeholder } = Input;
 
-export const GenreSelect: React.FC = () => {
+export const GenreSelect: React.FC<GenreSelectProps> = ({ genres }) => {
   const combobox = useCombobox();
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
@@ -22,16 +22,14 @@ export const GenreSelect: React.FC = () => {
     setSelectedValues(prev => prev.filter(item => item !== value));
   };
 
-  const data = ['123', '456', '789'];
-
   return (
     <Combobox store={combobox}>
       <Target>
         <InputBase
+          size='md'
           type='button'
           component='button'
           label='Genres'
-          size='md'
           rightSection={<IconChevronDown />}
           onClick={() => combobox.openDropdown()}
           onBlur={() => combobox.closeDropdown()}
@@ -45,18 +43,18 @@ export const GenreSelect: React.FC = () => {
       </Target>
 
       <Dropdown>
-        {data.map((item) => (
+        {genres.map(({ name, id }) => (
           <Option
-            value={item}
-            key={item}
+            value={name}
+            key={id}
             onClick={
-              () => selectedValues.includes(item)
-                ? onRemove(item)
-                : onSelect(item)
+              () => selectedValues.includes(name)
+                ? onRemove(name)
+                : onSelect(name)
             }
-            active={selectedValues.includes(item)}
+            active={selectedValues.includes(name)}
           >
-              {item}
+              {name}
             </Option>
         ))}
       </Dropdown>

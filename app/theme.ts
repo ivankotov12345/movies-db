@@ -6,6 +6,7 @@ import classes from './theme.module.scss';
 
 export const theme = createTheme({
   spacing: {
+    xxxs: rem(4),
     xxs: rem(8),
     xs: rem(10),
     sm: rem(14),
@@ -31,12 +32,12 @@ export const theme = createTheme({
   fontFamily: '"Inter", sans-serif',
   fontSmoothing: true,
   fontSizes: {
-    xs: rem(10),
-    sm: rem(12),
-    md: rem(14),
-    lg: rem(16),
-    xl: rem(24),
-    xxl: rem(32)
+    xxs: rem(10),
+    xs: rem(12),
+    sm: rem(14),
+    md: rem(16),
+    lg: rem(24),
+    xl: rem(32)
   },
   headings: {
     sizes: {

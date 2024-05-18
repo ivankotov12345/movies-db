@@ -8,12 +8,12 @@ export const SORT_OPTIONS = [
     label: 'Original title (descending)'
   },
   {
-    value: 'popularity.asc',
-    label: 'Most popular'
-  },
-  {
     value: 'popularity.desc',
     label: 'Less popular'
+  },
+  {
+    value: 'popularity.asc',
+    label: 'Most popular'
   },
   {
     value: 'revenue.asc',
@@ -25,11 +25,11 @@ export const SORT_OPTIONS = [
   },
   {
     value: 'primary_release_date.asc',
-    label: 'Newest'
+    label: 'Oldest'
   },
   {
     value: 'primary_release_date.desc',
-    label: 'Oldest'
+    label: 'Newest'
   },
   {
     value: 'title.asc',
@@ -49,10 +49,10 @@ export const SORT_OPTIONS = [
   },
   {
     value: 'vote_count.asc',
-    label: 'Most voted'
+    label: 'Less voted'
   },
   {
     value: 'vote_count.desc',
-    label: 'Less voted'
+    label: 'Most voted'
   },
 ];

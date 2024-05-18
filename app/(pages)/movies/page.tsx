@@ -1,6 +1,6 @@
 'use client';
 
-import { Title } from '@mantine/core';
+import { Pagination, Stack, Title } from '@mantine/core';
 import axios, { AxiosResponse } from 'axios';
 import { Fragment, useEffect, useState } from 'react';
 import { ProxyApiPaths } from '@app/types/enums/api-paths';
@@ -12,11 +12,12 @@ import { FiltersList } from './components/filters-list/filters-list';
 
 export default function MoviesPage() {
   const [genres, setGenres] = useState<GenreType[]>([]);
+  const [totalPages, setTotalPages] = useState<number>();
   const [moviesList, setMoviesList] = useState<MovieType[]>([]);
   const [searchParams, setSearchParams] = useState<SearchParamsType>(
     {
       language: 'en-US',
-      sort_by: 'popularity.asc',
+      sort_by: 'popularity.desc',
       page: 1,
     }
   );
@@ -40,6 +41,9 @@ export default function MoviesPage() {
 
     if(data) {
       setMoviesList(data.results);
+      data.total_pages > 500
+        ? setTotalPages(500)
+        : setTotalPages(data.total_pages);
     }
   };
 
@@ -48,20 +52,38 @@ export default function MoviesPage() {
     getMoviesList(searchParams);
   }, [searchParams]);
 
+  const handlePageChange = (value: number) => {
+    setSearchParams((params) => ({
+      ...params,
+      page: value,
+    }));
+    getMoviesList(searchParams);
+  };
+
   return (
     <Fragment>
       <Header>
         <Title order={1}>Movies</Title>
       </Header>
 
-      <main>
+      <Stack component='main' gap='lg'>
         <FiltersList genres={genres} />
 
-        <MoviesList
-          moviesList={moviesList}
-          genres={genres}
-        />
-      </main>
+        {moviesList &&
+          <MoviesList
+            moviesList={moviesList}
+            genres={genres}
+          />
+        }
+
+        {totalPages && totalPages > 0  &&
+          <Pagination
+            total={totalPages}
+            value={searchParams.page ? +searchParams.page : 1}
+            onChange={handlePageChange}
+          />
+        }
+      </Stack>
     </Fragment>
   );
 }
