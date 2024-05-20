@@ -1,0 +1,7 @@
+@use '../../scss/index' as *;
+
+.trailer {
+    width: $video-width-desktop;
+    height: $video-height-desktop;
+    border-radius: 9px;
+}

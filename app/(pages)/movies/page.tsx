@@ -35,7 +35,7 @@ export default function MoviesPage() {
       {
         params: {
           ...searchParams
-        }
+        },
       }
     );
 

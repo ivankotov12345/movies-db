@@ -1,19 +1,18 @@
 import { Button, Card, Flex, Group, Text, Title, useMantineTheme } from '@mantine/core';
 import { IconStarFilled } from '@tabler/icons-react';
 import moment from 'moment';
-import Image from 'next/image';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   CARD_IMAGE_HEIGHT,
   CARD_IMAGE_WIDTH,
   FONT_WEIGHT_LOGO,
-  HEIGHT_CARD_INFO,
-  RADIUS_LARGE
+  RADIUS_LARGE,
+  SPACING_MAX
 } from '@app/constants/constants';
 import { transformVoteCount } from '@app/helpers/format';
 import { ApiPaths } from '@app/types/enums/api-paths';
 import { GenreType, MovieType } from '@app/types/types/response-types';
-import { NoImagePlaceholder } from '../no-image-placeholder';
+import { Poster } from '../poster';
 
 import styles from './movie-card.module.scss';
 
@@ -23,7 +22,7 @@ type MovieCardProps = {
 }
 
 export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
-  const [isLoadFail, setIsLoadFail] = useState(false);
+  const router = useRouter();
   const theme = useMantineTheme();
 
   const releaseYear = moment(movie.release_date).format('YYYY');
@@ -33,31 +32,22 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
     .map((genre) => genre.name)
     .join(', ');
 
-  const handleImageError = () => setIsLoadFail(true);
+  const onCardClick = () => router.push(`${movie.id}`);
 
   return (
-    <Card padding='xl' radius={RADIUS_LARGE}>
+    <Card padding='xl' radius={RADIUS_LARGE} onClick={onCardClick}>
         <Group align='start' wrap='nowrap' w={390}>
-          {isLoadFail
-            ? 
-              <NoImagePlaceholder
-                  width={CARD_IMAGE_WIDTH}
-                  height={CARD_IMAGE_HEIGHT}
-                />
-            : <Image
-                src={`${ApiPaths.IMAGE_BASE_URL}${movie.poster_path}`}
-                alt={movie.title}
-                width={CARD_IMAGE_WIDTH}
-                height={CARD_IMAGE_HEIGHT}
-                loading='lazy'
-                onError={handleImageError}
-              />
-            }
+          <Poster
+            src={`${ApiPaths.IMAGE_BASE_URL}${movie.poster_path}`}
+            width={CARD_IMAGE_WIDTH}
+            height={CARD_IMAGE_HEIGHT}
+            alt={movie.original_title}
+          />
 
           <Flex
             direction='column'
             justify='space-between'
-            h={HEIGHT_CARD_INFO}
+            h={SPACING_MAX}
             w={255}
           >
             <Flex direction='column' gap='xxs'>
@@ -75,8 +65,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
                     {`(${transformVoteCount(movie.vote_count)})`}
                   </Text>
                 </Group>
-              </Group>
-              }
+              </Group>}
             </Flex>
 
             {movie.genre_ids &&

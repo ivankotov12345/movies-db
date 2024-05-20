@@ -9,12 +9,11 @@ type NoImagePlaceholderProps = {
 export const NoImagePlaceholder: React.FC<NoImagePlaceholderProps> = ({ width, height }) => {
   return (
     <Center
-      c='appColors.3'
-      color='appColors.1'
+      bg='appColors.3'
       w={width}
       h={height}
     >
-      <Stack>
+      <Stack align='center' c='appColors.1'>
         <IconPhotoX />
         <Text>No poster</Text>
       </Stack>

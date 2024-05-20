@@ -3,8 +3,17 @@ import { instance } from '@app/helpers/axios';
 import { ApiPaths } from '@app/types/enums/api-paths';
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
+  const id = request.nextUrl.pathname.split('/')[2];
   
-  const { data } = await instance.get(`${ApiPaths.MOVIES_LIST}?${searchParams}`);
+  const { data } = await instance.get(
+    `${ApiPaths.MOVIE}/${id}`,
+    {
+      params: {
+        language: 'en-US',
+        append_to_response: 'videos'
+      }
+    }
+  );
+  
   return Response.json(data);
 }

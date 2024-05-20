@@ -37,7 +37,8 @@ export const theme = createTheme({
     sm: rem(14),
     md: rem(16),
     lg: rem(24),
-    xl: rem(32)
+    xl: rem(32),
+    xxl: rem(40),
   },
   headings: {
     sizes: {
