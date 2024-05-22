@@ -118,7 +118,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
                 </Group>}
               </Stack>
 
-              {movie.genre_ids &&
+              {movie.genre_ids.length > 0 &&
                 <Group gap='xxs' wrap='nowrap'>
                   <Text c='appColors.0'>Genres</Text>
                   <Text lineClamp={1}>{movieGenres}</Text>

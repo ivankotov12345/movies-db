@@ -1,12 +1,15 @@
 'use client';
 
-import { Pagination, Stack, Title } from '@mantine/core';
+import { Flex, Group, Select, Stack, Title } from '@mantine/core';
+import { IconChevronDown } from '@tabler/icons-react';
 import axios, { AxiosResponse } from 'axios';
 import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
+import { SORT_OPTIONS } from '@app/constants/sort-options';
 import { ProxyApiPaths } from '@app/types/enums/api-paths';
 import { SearchParamsType } from '@app/types/types/request-types';
 import { GenreType, MovieType, MoviesListResponseType } from '@app/types/types/response-types';
+import { CustomPagination } from '../components/custom-pagination';
 import { Header } from '../components/header';
 import { FiltersList } from './components/filters-list/filters-list';
 
@@ -64,6 +67,13 @@ export default function MoviesPage() {
     getMoviesList(searchParams);
   };
 
+  const handleSortChange = (value: string | null) => {
+    setSearchParams((params) => ({
+      ...params,
+      sort_by: value
+    }));
+  };
+
   return (
     <Fragment>
       <Header>
@@ -73,35 +83,32 @@ export default function MoviesPage() {
       <Stack component='main' gap='lg'>
         <FiltersList genres={genres} />
 
+        <Flex justify='end'>
+          <Select
+            size='md'
+            label='Sort by'
+            data={SORT_OPTIONS}
+            defaultValue='popularity.asc'
+            withCheckIcon={false}
+            rightSection={<IconChevronDown />}
+            onChange={handleSortChange}
+          />
+        </Flex>
+        
         {moviesList &&
           <MoviesList
             moviesList={moviesList}
             genres={genres}
-          />
-        }
+          />}
 
-        {totalPages && totalPages > 0  &&
-          <Pagination
-            total={totalPages}
-            value={searchParams.page ? +searchParams.page : 1}
-            onChange={handlePageChange}
-            boundaries={0}
-            getItemProps={(page) => ({
-              style: {
-                display: 
-                  (searchParams.page <= 2 && page > 3) || 
-                  (searchParams.page >= totalPages - 1 && page < totalPages - 2) ||
-                  (
-                    searchParams.page > 2
-                    && searchParams.page < totalPages - 1
-                    && Math.abs(searchParams.page - page) > 1
-                  ) 
-                  ? 'none' 
-                  : 'block',
-              },
-            })} 
-          />
-        }
+        {totalPages && totalPages > 1 &&
+          <Group pt='lg' justify='flex-end' pb={82}>
+            <CustomPagination
+              totalPages={totalPages}
+              currentPage={searchParams.page ? +searchParams.page : 1}
+              handlePageChange={handlePageChange}
+            />
+          </Group>}
       </Stack>
     </Fragment>
   );

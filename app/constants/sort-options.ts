@@ -8,11 +8,11 @@ export const SORT_OPTIONS = [
     label: 'Original title (descending)'
   },
   {
-    value: 'popularity.desc',
+    value: 'popularity.asc',
     label: 'Less popular'
   },
   {
-    value: 'popularity.asc',
+    value: 'popularity.desc',
     label: 'Most popular'
   },
   {
@@ -40,11 +40,11 @@ export const SORT_OPTIONS = [
     label: 'Title (descending)'
   },
   {
-    value: 'vote_average.asc',
+    value: 'vote_average.desc',
     label: 'Most rated'
   },
   {
-    value: 'vote_average.desc',
+    value: 'vote_average.asc',
     label: 'Less rated'
   },
   {

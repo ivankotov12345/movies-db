@@ -4,6 +4,6 @@ export type SearchParamsType = {
     primary_release_year?: string,
     'vote_average.lte'?: string,
     'vote_average.gte'?: string,
-    sort_by: string,
+    sort_by: string | null,
     page: number,
 }

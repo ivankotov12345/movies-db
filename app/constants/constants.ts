@@ -24,3 +24,4 @@ export const RADIUS_LARGE = 12;
 export const RADIUS_SMALL = 8;
 
 export const MAX_TOTAL_PAGES = 500;
+export const ITEMS_PER_PAGE = 4;
