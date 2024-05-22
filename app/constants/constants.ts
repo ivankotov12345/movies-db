@@ -7,6 +7,7 @@ export const CARD_IMAGE_HEIGHT = 170;
 export const POSTER_IMAGE_WIDTH = 250;
 export const POSTER_IMAGE_HEIGHT = 352;
 
+export const MAX_CARD_HEIGHT = 218;
 export const MOVIE_CARD_HEIGHT = 400;
 
 
@@ -17,8 +18,9 @@ export const FONT_WEIGHT_RESET = 500;
 export const FONT_WEIGHT_LOGO = 600;
 export const FONT_WEIGHT_BOLD = 700;
 
-export const RADIUS_LARGE = 12;
 
-export const PADDING_CONTENT_DESKTOP = '0 90px';
+
+export const RADIUS_LARGE = 12;
+export const RADIUS_SMALL = 8;
 
 export const MAX_TOTAL_PAGES = 500;

@@ -9,8 +9,7 @@ import {
   FONT_WEIGHT_LOGO,
   LAYOUT_MAX_WIDTH,
   MIN_HEIHT,
-  NAVIGATION_WIDTH,
-  PADDING_CONTENT_DESKTOP } from '@app/constants/constants';
+  NAVIGATION_WIDTH } from '@app/constants/constants';
 import { NAVIGATION } from '@app/constants/navigation';
 
 import logo from '@public/assets/svg/logo.svg';
@@ -62,7 +61,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           </aside>
         </Col>
 
-        <Col span='auto' p={PADDING_CONTENT_DESKTOP}>
+        <Col span='auto' maw={980} mx='auto'>
           { children }
         </Col>
       </Grid>

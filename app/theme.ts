@@ -1,6 +1,6 @@
 'use client';
 
-import { Combobox, Input, NumberInput, Select, createTheme, rem } from '@mantine/core';
+import { Combobox, Input, Modal, NumberInput, Pagination, Select, createTheme, rem } from '@mantine/core';
 
 import classes from './theme.module.scss';
 
@@ -78,6 +78,16 @@ export const theme = createTheme({
       classNames: {
         controls: classes.controls,
         control: classes.control,
+      }
+    }),
+    Modal: Modal.extend({
+      classNames: {
+        body: classes.modalBody,
+      }
+    }),
+    Pagination: Pagination.extend({
+      classNames: {
+        dots: classes.paginationDots
       }
     })
   },

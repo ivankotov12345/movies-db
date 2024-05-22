@@ -1,4 +1,4 @@
-import styles from './header.module.scss';
+import { Box } from '@mantine/core';
 
 type HeaderProps = {
   children: React.ReactNode
@@ -7,8 +7,8 @@ type HeaderProps = {
 export const Header: React.FC<HeaderProps> = ({ children }) => {
   
   return (
-    <header className={styles.header}>
+    <Box component='header' py={42}>
       { children }
-    </header>
+    </Box>
   );
 };
