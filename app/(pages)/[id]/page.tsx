@@ -8,6 +8,7 @@ import {
   Divider,
   Group,
   Image,
+  LoadingOverlay,
   Stack,
   Table,
   Text,
@@ -53,15 +54,18 @@ export default function Movie() {
   const [releaseYear, setReleseYear] = useState<string>();
   const [tableData, setTableData] = useState<TableRowtype[]>();
   const [video, setVideo] = useState<VideoDataType>();
+  const [isLoading, setIsLoading] = useState(false);
   const [opened, { open, close }] = useDisclosure();
 
 
   const id = usePathname().split('/')[1];
 
   const getMovieData = useCallback(async () => {
+    setIsLoading(true);
     const { data } = await axios.get(`api/${id}`);
 
     if(data) {
+      setIsLoading(false);
       setMove(data);
     }
   }, [id]);
@@ -128,6 +132,12 @@ export default function Movie() {
 
   return (
     <Container component='main' maw={DESCRIPTION_MAX_WIDTH} p={0}>
+        <LoadingOverlay
+          visible={isLoading}
+          zIndex={1000}
+          overlayProps={{ radius: 'sm', blur: 2, opacity: '.3', pos: 'fixed'}}
+          loaderProps={{ color: 'appColors.6', pos: 'fixed' }}
+        />
       <Stack>
         {movie && 
           <Card

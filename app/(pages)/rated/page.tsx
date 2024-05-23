@@ -13,6 +13,7 @@ import { Header } from '../components/header';
 import { MoviesList } from '../components/movies-list';
 
 import styles from './page.module.scss';
+import { EmptyList } from '../components/empty-list';
 
 export default function RatedPage() {
   const [genres, setGenres] = useState<GenreType[]>([]);
@@ -25,6 +26,8 @@ export default function RatedPage() {
     const ratedMovies = localStorage.getItem('rated_movies');
     return ratedMovies !== null ? JSON.parse(ratedMovies) : [];
   }, []);
+
+  console.log(searchValue);
 
   useEffect(() => {
     setMoviesList(ratedMoviesArr);
@@ -67,7 +70,6 @@ export default function RatedPage() {
     setItems(moviesList.slice(from, to));
   }, [page, moviesList]);
 
-
   return (
     <Fragment>
       <Header>
@@ -97,18 +99,27 @@ export default function RatedPage() {
           />
         </Group>
       </Header>
-      
-      <Box component='main' mih={450}>
-        {items && <MoviesList moviesList={items} genres={genres} />}
-      </Box>
-      {totalItems && totalItems > 4
-        && <Group justify='center' py='lg'>
-            <CustomPagination
-              totalPages={totalPages}
-              handlePageChange={setPage}
-              currentPage={page}
-            />
-           </Group>}
+      {moviesList.length > 0 && searchValue !== ''
+        ? (
+          <Fragment>
+            <Box component='main' mih={450}>
+              {items && <MoviesList moviesList={items} genres={genres} />}
+            </Box>
+            {totalItems && totalItems > 4
+              && <Group justify='center' py='lg'>
+                  <CustomPagination
+                    totalPages={totalPages}
+                    handlePageChange={setPage}
+                    currentPage={page}
+                  />
+                 </Group>}
+          </Fragment>
+        ) 
+        : (
+          <EmptyList />
+        )       
+      }
+
     </Fragment>
   );
 }

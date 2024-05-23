@@ -1,0 +1,8 @@
+@use '../../scss/index' as *;
+
+.logo {
+    margin-bottom: $margin-logo;
+    font-family: $second-family;
+    color: $purple-main-500;
+    letter-spacing: -0.02em;
+}

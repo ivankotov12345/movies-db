@@ -16,14 +16,6 @@ type PagesLayoutProps = {
   children: React.ReactNode
 }
 
-export function generateStaticParams() {
-  const categories = ['movies', 'rated'];
-
-  return categories.map((item) =>({
-    category: item
-  }));
-}
-
 export default function RootLayout({ children }: PagesLayoutProps) {
   return (
     <html lang='en'>

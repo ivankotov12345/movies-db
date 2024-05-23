@@ -7,6 +7,10 @@ export const CARD_IMAGE_HEIGHT = 170;
 export const POSTER_IMAGE_WIDTH = 250;
 export const POSTER_IMAGE_HEIGHT = 352;
 
+export const EMPTY_IMAGE_WIDTH = 312;
+export const EMPTY_IMAGE_HEIGHT = 253;
+
+
 export const MAX_CARD_HEIGHT = 218;
 export const MOVIE_CARD_HEIGHT = 400;
 

@@ -1,0 +1,1 @@
+export { NoRatedmovies } from './no-rated-movies';

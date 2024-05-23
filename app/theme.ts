@@ -2,6 +2,7 @@
 
 import { Combobox, Input, Modal, NumberInput, Pagination, Select, createTheme, rem } from '@mantine/core';
 
+import { YearPickerInput } from '@mantine/dates';
 import classes from './theme.module.scss';
 
 export const theme = createTheme({
@@ -59,6 +60,7 @@ export const theme = createTheme({
     InputWrapper: Input.Wrapper.extend({
       classNames: {
         label: classes.label,
+        error: classes.error,
       },
     }),
 
@@ -80,6 +82,7 @@ export const theme = createTheme({
         control: classes.control,
       }
     }),
+
     Modal: Modal.extend({
       classNames: {
         body: classes.modalBody,
@@ -88,6 +91,11 @@ export const theme = createTheme({
     Pagination: Pagination.extend({
       classNames: {
         dots: classes.paginationDots
+      }
+    }),
+    YearPickerInput: YearPickerInput.extend({
+      classNames:{
+        yearsListCell: classes.yearsListCell
       }
     })
   },

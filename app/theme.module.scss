@@ -16,6 +16,10 @@
     line-height: 140%;
 }
 
+.error {
+    position: absolute;
+}
+
 .dropdown {
     padding: $spacing-option;
     border-radius: $radius-small;
@@ -30,6 +34,16 @@
         background: $purple-main-500;
         border-radius: $radius-small;
         color: $color-white;
+    }
+}
+
+.yearsListCell {
+    button {
+        &[data-selected] {
+            background: $purple-main-500;
+            border-radius: $radius-small;
+            color: $color-white;
+        }
     }
 }
 

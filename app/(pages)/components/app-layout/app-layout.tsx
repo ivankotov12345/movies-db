@@ -1,18 +1,16 @@
 'use client';
 
-import { Container, Grid, Group, Image, NavLink, Text } from '@mantine/core';
-import { default as NextImage } from 'next/image';
+import { Container, Grid, NavLink, Text } from '@mantine/core';
 import Link from 'next/link';
 import { useState } from 'react';
+import { Logo } from '@app/component/logo/logo';
 import {
   FONT_WEIGHT_BOLD,
-  FONT_WEIGHT_LOGO,
   LAYOUT_MAX_WIDTH,
   MIN_HEIHT,
   NAVIGATION_WIDTH } from '@app/constants/constants';
 import { NAVIGATION } from '@app/constants/navigation';
 
-import logo from '@public/assets/svg/logo.svg';
 
 import styles from './app-layout.module.scss';
 
@@ -33,16 +31,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       <Grid gutter={0}>
         <Col maw={NAVIGATION_WIDTH} p='lg' className={styles.sidebarWrapper} mih={MIN_HEIHT}>
           <aside>
-            <Group className={styles.logo}>
-              <Image
-                component={NextImage}
-                src={logo}
-                alt='website logo'
-              />
-              <Text span size='lg' fw={FONT_WEIGHT_LOGO}>
-                ArrowFlicks
-              </Text>
-            </Group>
+            <Logo />
+
             <nav className={styles.navigation}>
               {NAVIGATION.map(({ link, path }, index) => (
                 <NavLink
