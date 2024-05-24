@@ -98,7 +98,7 @@ export default function MoviesPage() {
         <LoadingOverlay
           visible={isLoading}
           zIndex={1000}
-          overlayProps={{ radius: 'sm', blur: 2, pos: 'fixed'}}
+          overlayProps={{ radius: 'sm', color: 'black', opacity: '.2', pos: 'fixed'}}
           loaderProps={{ color: 'appColors.6', pos: 'fixed' }}
           />
 

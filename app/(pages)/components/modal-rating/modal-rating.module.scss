@@ -1,0 +1,9 @@
+@use '../../../scss/index' as *;
+
+.overlay {
+    background: rgba(0, 0, 0, .2)
+}
+
+.ratingWrapper {
+    justify-content: space-between;
+}

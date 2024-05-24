@@ -9,3 +9,11 @@
         gap: $gap-lg;
     }
 }
+
+.link {
+    border-radius: 8px;
+    &:hover {
+        background: transparent;
+        color: $purple-main-500;
+    }
+}

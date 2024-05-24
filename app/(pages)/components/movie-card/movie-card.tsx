@@ -78,6 +78,11 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres, ratedMovies
     }
     localStorage.setItem('rated_movies', JSON.stringify(ratedMoviesArr));
   };
+
+  const onButtonRemoveClick = () => {
+    const filteredRatedMoviesArr = ratedMoviesArr.filter(ratedMovie => ratedMovie.id !== movie.id);
+    localStorage.setItem('rated_movies', JSON.stringify(filteredRatedMoviesArr));
+  };
   
 
   return (
@@ -94,6 +99,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres, ratedMovies
           gap={width > LAYOUT_MAX_WIDTH_MOBILE ? 'xxs' : 0}
           justify='space-between'
         >
+          <Group align='start' h={SPACING_MAX} w={SPACING_MAX} justify='space-between'>
           <Group gap='md' wrap='nowrap' align='start' h={SPACING_MAX}>
             <Poster
               src={`${ApiPaths.IMAGE_BASE_URL}${movie.poster_path}`}
@@ -130,13 +136,14 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres, ratedMovies
                 </Group>
               </Group>}
               </Stack>
-
+              
               {movie.genre_ids.length > 0 &&
                 <Group gap='xxs' wrap='nowrap'>
                   <Text c='appColors.0'>Genres</Text>
                   <Text lineClamp={1}>{movieGenres}</Text>
                 </Group>}
             </Stack>
+            </Group>
 
             <RatingButton open={open} rating={rating} />
           </Group>
@@ -146,10 +153,11 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres, ratedMovies
       <ModalRating
         opened={opened}
         close={close}
-        movie={movie}
+        title={movie.original_title}
         onSaveRating={onSaveRating}
         cardRating={rating}
         setCardRating={setRating}
+        onButtonRemoveClick={onButtonRemoveClick}
       />
     </Fragment>
   );

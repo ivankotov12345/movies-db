@@ -1,10 +1,11 @@
 'use client';
 
 import { Box, Button, Group, TextInput, Title } from '@mantine/core';
+import { useViewportSize } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';
 import axios from 'axios';
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { ITEMS_PER_PAGE, RADIUS_SMALL } from '@app/constants/constants';
+import { ITEMS_PER_PAGE, LAYOUT_MAX_WIDTH_MOBILE, RADIUS_SMALL, SPACING_MAX } from '@app/constants/constants';
 import { getStorageItem } from '@app/helpers/storage';
 import { ProxyApiPaths } from '@app/types/enums/api-paths';
 import { GenreType, MovieType } from '@app/types/types/response-types';
@@ -22,6 +23,8 @@ export default function RatedPage() {
   const [moviesList, setMoviesList] = useState<MovieType[]>([]);
   const [totalItems, setTotalItems] = useState<number>();
   const [page, setPage] = useState<number>(1);
+
+  const { width } = useViewportSize();
 
   const ratedMoviesArr = useMemo<MovieType[]>(() => {
     const ratedMovies = localStorage.getItem('rated_movies');
@@ -77,7 +80,12 @@ export default function RatedPage() {
   return (
     <Fragment>
       <Header>
-        <Group justify='space-between' align='center'>
+        <Group
+          justify='space-between'
+          wrap={width > LAYOUT_MAX_WIDTH_MOBILE ? 'nowrap' : 'wrap'}
+          align='center'
+          w={SPACING_MAX}
+        >
           <Title order={1}>Rated movies</Title>
 
           <TextInput

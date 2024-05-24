@@ -83,20 +83,22 @@ export default function Movie() {
       movies: true,
       rated: true,
     };
-
     if(!validPaths[catalog]) {
       router.push(Paths.NOT_FOUND);
     }
-    setIsLoading(true);
-   
-    const { data } = await axios.get(`/api/${catalog}/${id}`);
-
-    if(data) {
-      setIsLoading(false);
-      setMove(data);
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(`/api/${catalog}/${id}`);
+      if(data) {
+        setIsLoading(false);
+        setMove(data);
+      }
+    } catch(error) {
+      if(error) {
+        router.push(Paths.NOT_FOUND);
+      }
     }
   }, [id, catalog, router]);
-
 
   useEffect(() => {
     getMovieData();
@@ -181,6 +183,11 @@ export default function Movie() {
     }
   };
 
+  const onButtonRemoveClick = () => {
+    const filteredRatedMoviesArr = ratedMoviesArr.filter(ratedMovie => ratedMovie.id !== +id);
+    localStorage.setItem('rated_movies', JSON.stringify(filteredRatedMoviesArr));
+  };
+
   const toggleBurgerMenu = () => {
     setIsBurgerOpen(!isBurgerOpen);
   };
@@ -195,7 +202,7 @@ export default function Movie() {
       <LoadingOverlay
         visible={isLoading}
         zIndex={1000}
-        overlayProps={{ radius: 'sm', blur: 2, opacity: '.3', pos: 'fixed'}}
+        overlayProps={{ radius: 'sm', color: 'black', opacity: '.2', pos: 'fixed'}}
         loaderProps={{ color: 'appColors.6', pos: 'fixed' }}
       />
 
@@ -294,6 +301,7 @@ export default function Movie() {
               {movie && movie.production_companies &&
                 <Stack gap={12}>
                   <Title order={4} mb='md'>Production</Title>
+
                   {movie.production_companies.map((company) => (
                     <Group key={company.id} gap='xxs'>
                       <Avatar>
@@ -316,9 +324,10 @@ export default function Movie() {
 
       { movie && 
         <ModalRating
+          onButtonRemoveClick={onButtonRemoveClick}
           opened={opened}
           close={close}
-          movie={movie}
+          title={movie.original_title}
           onSaveRating={onSaveRating}
           cardRating={rating}
           setCardRating={setRating}

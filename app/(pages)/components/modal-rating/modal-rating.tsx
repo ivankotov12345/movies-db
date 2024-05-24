@@ -1,27 +1,35 @@
-import { Box, Button, Divider, Modal, Rating, Stack, Text, Title } from '@mantine/core';
-import { RADIUS_SMALL } from '@app/constants/constants';
-import { MovieResponseType, MovieType } from '@app/types/types/response-types';
+import { Button, Divider, Group, Modal, Rating, Stack, Text, Title } from '@mantine/core';
+import { RADIUS_SMALL, SPACING_MAX } from '@app/constants/constants';
+
+import styles from './modal-rating.module.scss';
 
 type ModalProps = {
   opened: boolean,
   close: () => void,
-  movie: MovieType | MovieResponseType,
+  title: string,
   onSaveRating: (rating: number) => void,
   cardRating: number,
   setCardRating: (cardRating: number) => void,
+  onButtonRemoveClick: () => void
 }
 
 export const ModalRating: React.FC<ModalProps> = ({
   opened,
   close,
-  movie,
+  title,
   onSaveRating,
   cardRating,
-  setCardRating
+  setCardRating,
+  onButtonRemoveClick
 }) => {
 
   const onButtonSaveClick = () => {
     onSaveRating(cardRating),
+    close();
+  };
+
+  const onRemoveClick = () => {
+    onButtonRemoveClick();
     close();
   };
 
@@ -34,10 +42,13 @@ export const ModalRating: React.FC<ModalProps> = ({
       p={0}
       radius={RADIUS_SMALL}
       size='sm'
+      classNames={{
+        overlay: styles.overlay,
+      }}
     >
       <Divider />
       <Stack p='md'>
-        <Title order={4}>{movie.original_title}</Title>
+        <Title order={4}>{title}</Title>
 
         <Rating
           defaultValue={cardRating}
@@ -45,12 +56,29 @@ export const ModalRating: React.FC<ModalProps> = ({
           count={10}
           onChange={setCardRating}
           size='lg'
+          w={SPACING_MAX}
+          classNames={{
+            root: styles.ratingWrapper
+          }}
         />
 
-        <Box>
-          <Button onClick={onButtonSaveClick}>Save</Button>
-          <Button>Remove rating</Button>
-        </Box>
+        <Group gap={0}>
+          <Button
+            color='appColors.6'
+            onClick={onButtonSaveClick}
+            size='md'
+          >
+            Save
+          </Button>
+          <Button
+            color='appColors.6'
+            size='md'
+            variant='transparent'
+            onClick={onRemoveClick}
+            >
+              Remove rating
+            </Button>
+        </Group>
       </Stack>
     </Modal>
   );
