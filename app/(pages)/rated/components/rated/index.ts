@@ -1,0 +1,1 @@
+export { Rated } from './rated';
