@@ -17,6 +17,10 @@ import { NoRatedmovies } from '../components/no-rated-movies';
 
 import styles from './page.module.scss';
 
+export async function getServerSideProps() {
+  return { props: {} };
+}
+
 export default function RatedPage() {
   const [genres, setGenres] = useState<GenreType[]>([]);
   const [searchValue, setSearchValue] = useState('');
