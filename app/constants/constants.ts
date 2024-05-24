@@ -4,6 +4,9 @@ export const NAVIGATION_WIDTH = 280;
 export const CARD_IMAGE_WIDTH = 119;
 export const CARD_IMAGE_HEIGHT = 170;
 
+export const LAYOUT_MAX_WIDTH_TABLET = 983;
+export const LAYOUT_MAX_WIDTH_MOBILE = 420;
+
 export const POSTER_IMAGE_WIDTH = 250;
 export const POSTER_IMAGE_HEIGHT = 352;
 

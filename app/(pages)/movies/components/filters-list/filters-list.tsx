@@ -1,10 +1,11 @@
-import { Box, Button, Group, Input, NumberInput, SimpleGrid } from '@mantine/core';
+import { Box, Button, Flex, Group, Input, NumberInput, SimpleGrid } from '@mantine/core';
 import { DateValue, YearPickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
+import { useViewportSize } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
 import moment from 'moment';
 import { useState } from 'react';
-import { FONT_WEIGHT_RESET } from '@app/constants/constants';
+import { FONT_WEIGHT_RESET, LAYOUT_MAX_WIDTH_TABLET } from '@app/constants/constants';
 import { FormValues } from '@app/types/types/form-types';
 import { SearchParamsType } from '@app/types/types/request-types';
 import { GenreType } from '@app/types/types/response-types';
@@ -30,6 +31,7 @@ export const FiltersList: React.FC<FiltersListProps> = ({
     vote_average_gte: searchParams['vote_average.gte'],
   };
   const [reset, setReset] = useState(false);
+  const { width } = useViewportSize();
 
   const form = useForm<FormValues>({
     mode: 'uncontrolled',
@@ -127,8 +129,13 @@ export const FiltersList: React.FC<FiltersListProps> = ({
 
   return (
     <form>
-      <Group gap='md' wrap='nowrap' align='end'>
-        <SimpleGrid cols={3}>
+      <Flex
+        gap='md'
+        wrap='nowrap'
+        direction={width > LAYOUT_MAX_WIDTH_TABLET ? 'row' : 'column'}
+        align={width > LAYOUT_MAX_WIDTH_TABLET ? 'end' : 'center'}
+      >
+        <SimpleGrid cols={width > LAYOUT_MAX_WIDTH_TABLET ? 3 : 1}>
         <GenreSelect
           genres={genres}
           form={form}
@@ -188,7 +195,7 @@ export const FiltersList: React.FC<FiltersListProps> = ({
             Reset filters
           </Button>
         </Box>
-      </Group>
+      </Flex>
     </form>
   );
 };

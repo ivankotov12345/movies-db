@@ -1,10 +1,12 @@
 'use client';
 
-import { Flex, Group, LoadingOverlay, Select, Stack, Title } from '@mantine/core';
+import { Accordion, Flex, Group, LoadingOverlay, Select, Stack, Text, Title } from '@mantine/core';
+import { useViewportSize } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
 import axios, { AxiosResponse } from 'axios';
 import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
+import { FONT_WEIGHT_LOGO, LAYOUT_MAX_WIDTH_MOBILE, LAYOUT_MAX_WIDTH_TABLET } from '@app/constants/constants';
 import { SORT_OPTIONS } from '@app/constants/sort-options';
 import { ProxyApiPaths } from '@app/types/enums/api-paths';
 import { SearchParamsType } from '@app/types/types/request-types';
@@ -29,6 +31,8 @@ export default function MoviesPage() {
       page: 1,
     }
   );
+
+  const { width } = useViewportSize();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -90,7 +94,7 @@ export default function MoviesPage() {
         <Title order={1}>Movies</Title>
       </Header>
 
-      <Stack component='main' gap='lg'>
+      <Stack component='main' gap='lg' px='xs'>
         <LoadingOverlay
           visible={isLoading}
           zIndex={1000}
@@ -98,12 +102,34 @@ export default function MoviesPage() {
           loaderProps={{ color: 'appColors.6', pos: 'fixed' }}
           />
 
-        <FiltersList
-          genres={genres}
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
-          getMoviesList={getMoviesList}
-        />
+        {width > LAYOUT_MAX_WIDTH_TABLET
+          ? (
+            <FiltersList
+            genres={genres}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
+            getMoviesList={getMoviesList}
+          />
+          )
+          : (
+            <Accordion>
+              <Accordion.Item value='Show filters'>
+                <Accordion.Control>
+                  <Text fw={FONT_WEIGHT_LOGO} size='lg' c='appColors.6'>Show filters</Text>
+                </Accordion.Control>
+                <Accordion.Panel>
+                <FiltersList
+                  genres={genres}
+                  searchParams={searchParams}
+                  setSearchParams={setSearchParams}
+                  getMoviesList={getMoviesList}
+                />
+                </Accordion.Panel>
+
+              </Accordion.Item>
+            </Accordion>
+          )}
+
 
         <Flex justify='end'>
           <Select
@@ -114,7 +140,7 @@ export default function MoviesPage() {
             withCheckIcon={false}
             rightSection={<IconChevronDown />}
             onChange={handleSortChange}
-            w={284}
+            w={width > LAYOUT_MAX_WIDTH_MOBILE ? 284 : '100%'}
           />
         </Flex>
         

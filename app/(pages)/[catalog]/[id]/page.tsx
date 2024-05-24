@@ -4,20 +4,20 @@ import {
   Avatar,
   Box,
   Breadcrumbs,
+  Burger,
   Card,
   Container,
   Divider,
   Group,
   Image,
   LoadingOverlay,
-  NavLink,
   Stack,
   Table,
   Text,
   Title,
   useMantineTheme
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useViewportSize } from '@mantine/hooks';
 import { IconStarFilled } from '@tabler/icons-react';
 import axios from 'axios';
 import moment from 'moment';
@@ -25,11 +25,16 @@ import { default as NextImage } from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { Context } from '@app/(pages)/context/context';
 import {
+  CARD_IMAGE_HEIGHT,
+  CARD_IMAGE_WIDTH,
   DESCRIPTION_MAX_WIDTH,
   FONT_WEIGHT_BOLD,
   FONT_WEIGHT_LOGO,
+  LAYOUT_MAX_WIDTH_MOBILE,
+  LAYOUT_MAX_WIDTH_TABLET,
   MOVIE_CARD_HEIGHT,
   POSTER_IMAGE_HEIGHT,
   POSTER_IMAGE_WIDTH,
@@ -62,6 +67,8 @@ export default function Movie() {
   const [isLoading, setIsLoading] = useState(false);
   const [breadcrumbsItems, setBreadcrumbsItems] = useState<Record<string, string>[]>();
   const [opened, { open, close }] = useDisclosure();
+  const { isBurgerOpen, setIsBurgerOpen } = useContext(Context);
+  const { width } = useViewportSize();
 
   const router = useRouter();
 
@@ -112,7 +119,13 @@ export default function Movie() {
   }, [catalog, movie, id]);
 
   const breadcrumbs = breadcrumbsItems && breadcrumbsItems.map((item) => (
-    <Text component={Link} href={item.href} key={item.title} size='sm' c='appColors.6'>
+    <Text
+      component={Link}
+      href={item.href}
+      key={item.title}
+      size={width <= LAYOUT_MAX_WIDTH_MOBILE ? 'xs' : 'sm'}
+      c='appColors.6'
+    >
       {item.title}
     </Text>
   ));
@@ -168,8 +181,12 @@ export default function Movie() {
     }
   };
 
+  const toggleBurgerMenu = () => {
+    setIsBurgerOpen(!isBurgerOpen);
+  };
+
   return (
-    <Container component='main' maw={DESCRIPTION_MAX_WIDTH} p={0}>
+    <Container component='main' maw={DESCRIPTION_MAX_WIDTH} py={10}>
       <LoadingOverlay
         visible={isLoading}
         zIndex={1000}
@@ -178,55 +195,69 @@ export default function Movie() {
       />
 
       <Stack mt={40} gap={20}>
-        <Breadcrumbs>
-          {breadcrumbs}
-        </Breadcrumbs>
+        <Group justify='space-between'>
+          <Breadcrumbs>
+            {breadcrumbs}
+          </Breadcrumbs>
+          {width <= LAYOUT_MAX_WIDTH_TABLET &&
+            <Burger
+              opened={isBurgerOpen}
+              onClick={toggleBurgerMenu}
+            />
+          }
+         
+        </Group>
         {movie && 
           <Card
             radius={RADIUS_LARGE}
-            p='lg'
+            p={width > LAYOUT_MAX_WIDTH_MOBILE ? 'lg' : 8}
             w={SPACING_MAX}
-            h={MOVIE_CARD_HEIGHT}
+            h={width > LAYOUT_MAX_WIDTH_TABLET ? MOVIE_CARD_HEIGHT : SPACING_MAX}
             component='section'
           >
-            <Group wrap='nowrap' align='start' justify='space-between'>
-              <Poster
-                src={`${ApiPaths.IMAGE_BASE_URL}${movie.poster_path}`}
-                alt={movie.original_title}
-                width={POSTER_IMAGE_WIDTH}
-                height={POSTER_IMAGE_HEIGHT}
-              />
+            <Group align='start' wrap='nowrap' justify='space-between'>
+              <Group wrap={width > LAYOUT_MAX_WIDTH_TABLET ? 'nowrap' : 'wrap'} align='start' h={SPACING_MAX}>
+                <Poster
+                  src={`${ApiPaths.IMAGE_BASE_URL}${movie.poster_path}`}
+                  alt={movie.original_title}
+                  width={width <= LAYOUT_MAX_WIDTH_MOBILE ? POSTER_IMAGE_WIDTH : CARD_IMAGE_WIDTH}
+                  height={width <= LAYOUT_MAX_WIDTH_MOBILE ? POSTER_IMAGE_HEIGHT: CARD_IMAGE_HEIGHT}
+                />
 
-              <Stack justify='space-between' h={SPACING_MAX}>
-                <Stack gap='xxs'>
-                  <Title order={4} c='appColors.6'>{movie.original_title}</Title>
-                  <Text c='appColors.0'>{releaseYear}</Text>
+                <Stack justify='space-between' h={SPACING_MAX}>
+                  <Stack gap='xxs'>
+                    <Title order={4} c='appColors.6'>{movie.original_title}</Title>
+                    <Text c='appColors.0'>{releaseYear}</Text>
 
-                  {movie.vote_average &&
-                    <Group gap='xxxs' align='center' h={SPACING_MAX}>
-                    <IconStarFilled color={theme.colors.appColors[11]} />
-                    <Group gap='xxs'>
-                      <Text span fw={FONT_WEIGHT_LOGO}>{movie.vote_average.toFixed(1)}</Text>
+                    {movie.vote_average &&
+                      <Group gap='xxxs' align='center' h={SPACING_MAX}>
+                      <IconStarFilled color={theme.colors.appColors[11]} />
+                      <Group gap='xxs'>
+                        <Text span fw={FONT_WEIGHT_LOGO}>{movie.vote_average.toFixed(1)}</Text>
 
-                      <Text span c='appColors.0'>
-                        {`(${transformVoteCount(movie.vote_count)})`}
-                      </Text>
-                    </Group>
-                  </Group>}
+                        <Text span c='appColors.0'>
+                          {`(${transformVoteCount(movie.vote_count)})`}
+                        </Text>
+                      </Group>
+                    </Group>}
+                  </Stack>
+
+                  <Table
+                    withRowBorders={false}
+                    verticalSpacing={4}
+                    horizontalSpacing={10}
+                  >
+                      <Tbody>
+                        {tableData && tableData.map((element) => (
+                          <Tr key={element.category}>
+                            <Td c='appColors.0'>{element.category}</Td>
+                            <Td>{element.value}</Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
                 </Stack>
-
-                <Table withRowBorders={false} verticalSpacing='xxs' horizontalSpacing='xxs'>
-                    <Tbody>
-                      {tableData && tableData.map((element) => (
-                        <Tr key={element.category}>
-                          <Td c='appColors.0'>{element.category}</Td>
-                          <Td>{element.value}</Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-              </Stack>
-              
+              </Group>
               <RatingButton rating={rating} open={open} />
             </Group>
           </Card>}
@@ -256,7 +287,8 @@ export default function Movie() {
                 </Box>}
 
               {movie && movie.production_companies &&
-                <Box>
+                <Stack gap={12}>
+                  <Title order={4} mb='md'>Production</Title>
                   {movie.production_companies.map((company) => (
                     <Group key={company.id} gap='xxs'>
                       <Avatar>
@@ -272,7 +304,7 @@ export default function Movie() {
                       <Text fw={FONT_WEIGHT_BOLD}>{company.name}</Text>
                     </Group>
                   ))}
-                </Box>}
+                </Stack>}
             </Box>
           </Card>
       </Stack>

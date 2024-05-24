@@ -3,5 +3,11 @@
 .trailer {
     width: $video-width-desktop;
     height: $video-height-desktop;
+    border: none;
     border-radius: 9px;
+
+    @media (max-width: 600px) {
+        width: $video-width-mobile;
+        height: $video-height-mobile;
+    }
 }

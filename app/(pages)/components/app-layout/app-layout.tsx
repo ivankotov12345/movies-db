@@ -1,18 +1,11 @@
 'use client';
 
-import { Container, Grid, NavLink, Text } from '@mantine/core';
-import Link from 'next/link';
-import { useState } from 'react';
-import { Logo } from '@app/component/logo/logo';
-import {
-  FONT_WEIGHT_BOLD,
-  LAYOUT_MAX_WIDTH,
-  MIN_HEIHT,
-  NAVIGATION_WIDTH } from '@app/constants/constants';
-import { NAVIGATION } from '@app/constants/navigation';
-
-
-import styles from './app-layout.module.scss';
+import { Container, Grid, Overlay, Transition } from '@mantine/core';
+import { useViewportSize } from '@mantine/hooks';
+import { Fragment, useState } from 'react';
+import { Context } from '@app/(pages)/context/context';
+import { LAYOUT_MAX_WIDTH, LAYOUT_MAX_WIDTH_TABLET } from '@app/constants/constants';
+import { Navigation } from '../navigation';
 
 type AppLayoutProps = {
   children: React.ReactNode
@@ -21,40 +14,47 @@ type AppLayoutProps = {
 const { Col } = Grid;
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
-  const [activeLink, setActiveLink] = useState(0);
-  
+  const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
+
+  const { width } = useViewportSize();
+
   return (
     <Container
       size={LAYOUT_MAX_WIDTH}
       p={0}
     >
+      <Context.Provider value={{ isBurgerOpen, setIsBurgerOpen }}>
       <Grid gutter={0}>
-        <Col maw={NAVIGATION_WIDTH} p='lg' className={styles.sidebarWrapper} mih={MIN_HEIHT}>
-          <aside>
-            <Logo />
+        {width > LAYOUT_MAX_WIDTH_TABLET
+        ? <Navigation />
+        : (
+          <Transition
+            mounted={isBurgerOpen}
+            transition='fade-right'
+            duration={300}
+          >
+            {(transitionStyle) => (
+              <Fragment>
+              <Overlay
+                color='appColors.4'
+                backgroundOpacity={0.2}
+                style={transitionStyle}
+                onClick={() => setIsBurgerOpen(false)}
+              />
+              <Navigation
+                style={{ ...transitionStyle, position: 'fixed', zIndex: 250 }}
+              />
+              </Fragment>
+            )}
+          </Transition>
+        )}
 
-            <nav className={styles.navigation}>
-              {NAVIGATION.map(({ link, path }, index) => (
-                <NavLink
-                  component={Link}
-                  active={index === activeLink}
-                  href={path}
-                  label={
-                  <Text fw={FONT_WEIGHT_BOLD}>{link}</Text>
-                  }
-                  key={link}
-                  onClick={() => setActiveLink(index)}
-                  color='appColors.6'
-                />
-              ))}
-            </nav>
-          </aside>
-        </Col>
 
-        <Col span='auto' maw={980} mx='auto'>
+        <Col span='auto' maw={1000} mx='auto'>
           { children }
         </Col>
       </Grid>
+      </Context.Provider>
     </Container>
   );
 };

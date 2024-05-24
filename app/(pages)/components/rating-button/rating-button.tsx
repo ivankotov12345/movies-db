@@ -1,6 +1,7 @@
 import { ActionIcon, Text, useMantineTheme } from '@mantine/core';
+import { useViewportSize } from '@mantine/hooks';
 import { IconStarFilled } from '@tabler/icons-react';
-import { FONT_WEIGHT_LOGO } from '@app/constants/constants';
+import { FONT_WEIGHT_LOGO, LAYOUT_MAX_WIDTH_MOBILE } from '@app/constants/constants';
 
 type RatingButtonProps = {
   rating: number,
@@ -8,6 +9,7 @@ type RatingButtonProps = {
 }
 
 export const RatingButton: React.FC<RatingButtonProps> = ({ rating, open }) => {
+  const { width } = useViewportSize();
   const theme = useMantineTheme();
 
   const onRatingClick = (event: React.MouseEvent) => {
@@ -31,7 +33,17 @@ export const RatingButton: React.FC<RatingButtonProps> = ({ rating, open }) => {
         width={28}
         height={28}
       />
-      {rating > 0 && <Text fw={FONT_WEIGHT_LOGO} c='black' pl={4}>{rating}</Text>}
+      {rating > 0
+        && <Text
+              fw={FONT_WEIGHT_LOGO}
+              c='black'
+              pl={4}
+              style={{
+                display: width > LAYOUT_MAX_WIDTH_MOBILE ? 'flex' : 'none'
+              }}
+            >
+              {rating}
+            </Text>}
     </ActionIcon>
   );
 };

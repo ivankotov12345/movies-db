@@ -3,17 +3,9 @@
 .sidebarWrapper {
     background: $purple-100;
 
-    .logo {
-        margin-bottom: $margin-logo;
-        font-family: $second-family;
-        color: $purple-main-500;
-        letter-spacing: -0.02em;
-    }
-
     .navigation {
         display: flex;
         flex-direction: column;
         gap: $gap-lg;
     }
 }
-
