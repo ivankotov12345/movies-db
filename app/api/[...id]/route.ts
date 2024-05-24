@@ -3,7 +3,7 @@ import { instance } from '@app/helpers/axios';
 import { ApiPaths } from '@app/types/enums/api-paths';
 
 export async function GET(request: NextRequest) {
-  const id = request.nextUrl.pathname.split('/')[2];
+  const id = request.nextUrl.pathname.split('/')[3];
   
   const { data } = await instance.get(
     `${ApiPaths.MOVIE}/${id}`,

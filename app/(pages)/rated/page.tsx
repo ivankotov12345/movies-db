@@ -9,11 +9,11 @@ import { getStorageItem } from '@app/helpers/storage';
 import { ProxyApiPaths } from '@app/types/enums/api-paths';
 import { GenreType, MovieType } from '@app/types/types/response-types';
 import { CustomPagination } from '../components/custom-pagination';
+import { EmptyList } from '../components/empty-list';
 import { Header } from '../components/header';
 import { MoviesList } from '../components/movies-list';
 
 import styles from './page.module.scss';
-import { EmptyList } from '../components/empty-list';
 
 export default function RatedPage() {
   const [genres, setGenres] = useState<GenreType[]>([]);
@@ -26,8 +26,6 @@ export default function RatedPage() {
     const ratedMovies = localStorage.getItem('rated_movies');
     return ratedMovies !== null ? JSON.parse(ratedMovies) : [];
   }, []);
-
-  console.log(searchValue);
 
   useEffect(() => {
     setMoviesList(ratedMoviesArr);

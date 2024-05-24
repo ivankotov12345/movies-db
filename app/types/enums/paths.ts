@@ -1,5 +1,6 @@
 export enum Paths {
   ROOT = '/',
   MOVIES = '/movies',
-  RATED = '/rated'
+  RATED = '/rated',
+  NOT_FOUND = '/not-found'
 }

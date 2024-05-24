@@ -3,12 +3,14 @@
 import {
   Avatar,
   Box,
+  Breadcrumbs,
   Card,
   Container,
   Divider,
   Group,
   Image,
   LoadingOverlay,
+  NavLink,
   Stack,
   Table,
   Text,
@@ -20,7 +22,9 @@ import { IconStarFilled } from '@tabler/icons-react';
 import axios from 'axios';
 import moment from 'moment';
 import { default as NextImage } from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import {
   DESCRIPTION_MAX_WIDTH,
@@ -35,12 +39,13 @@ import {
 import { transformDuration, transformReleaseDate, transformVoteCount } from '@app/helpers/format';
 import { getStorageItem } from '@app/helpers/storage';
 import { ApiPaths } from '@app/types/enums/api-paths';
+import { Paths } from '@app/types/enums/paths';
 import { MovieResponseType, MovieType, VideoDataType } from '@app/types/types/response-types';
 import { TableRowtype } from '@app/types/types/table-type';
-import { ModalRating } from '../components/modal-rating/modal-rating';
-import { Poster } from '../components/poster';
+import { ModalRating } from '../../components/modal-rating/modal-rating';
+import { Poster } from '../../components/poster';
+import { RatingButton } from '../../components/rating-button';
 
-import { RatingButton } from '../components/rating-button';
 import styles from './movie-page.module.scss';
 
 const { Tbody, Tr, Td } = Table;
@@ -55,20 +60,32 @@ export default function Movie() {
   const [tableData, setTableData] = useState<TableRowtype[]>();
   const [video, setVideo] = useState<VideoDataType>();
   const [isLoading, setIsLoading] = useState(false);
+  const [breadcrumbsItems, setBreadcrumbsItems] = useState<Record<string, string>[]>();
   const [opened, { open, close }] = useDisclosure();
 
+  const router = useRouter();
 
-  const id = usePathname().split('/')[1];
+  const catalog = usePathname().split('/')[1];
+  const id = usePathname().split('/')[2];
 
   const getMovieData = useCallback(async () => {
+    const validPaths: Record<string, boolean> = {
+      movies: true,
+      rated: true,
+    };
+
+    if(!validPaths[catalog]) {
+      router.push(Paths.NOT_FOUND);
+    }
     setIsLoading(true);
-    const { data } = await axios.get(`api/${id}`);
+   
+    const { data } = await axios.get(`/api/${catalog}/${id}`);
 
     if(data) {
       setIsLoading(false);
       setMove(data);
     }
-  }, [id]);
+  }, [id, catalog, router]);
 
   useEffect(() => {
     const currentRatedList = getStorageItem();
@@ -78,6 +95,27 @@ export default function Movie() {
   useEffect(() => {
     getMovieData();
   }, [getMovieData]);
+
+  useEffect(() => {
+    if(catalog === 'movies' && movie) {
+      setBreadcrumbsItems([
+        { title: 'Movies', href: Paths.MOVIES },
+        { title: movie.original_title, href: `/${catalog}/${id}` },
+      ]);
+    }
+    if(catalog === 'rated' && movie) {
+      setBreadcrumbsItems([
+        { title: 'Rated Movies', href: Paths.RATED },
+        { title: movie.original_title, href: `/${catalog}/${id}` },
+      ]);
+    }
+  }, [catalog, movie, id]);
+
+  const breadcrumbs = breadcrumbsItems && breadcrumbsItems.map((item) => (
+    <Text component={Link} href={item.href} key={item.title} size='sm' c='appColors.6'>
+      {item.title}
+    </Text>
+  ));
 
   useEffect(() => {
     if(movie) {
@@ -132,13 +170,17 @@ export default function Movie() {
 
   return (
     <Container component='main' maw={DESCRIPTION_MAX_WIDTH} p={0}>
-        <LoadingOverlay
-          visible={isLoading}
-          zIndex={1000}
-          overlayProps={{ radius: 'sm', blur: 2, opacity: '.3', pos: 'fixed'}}
-          loaderProps={{ color: 'appColors.6', pos: 'fixed' }}
-        />
-      <Stack>
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={1000}
+        overlayProps={{ radius: 'sm', blur: 2, opacity: '.3', pos: 'fixed'}}
+        loaderProps={{ color: 'appColors.6', pos: 'fixed' }}
+      />
+
+      <Stack mt={40} gap={20}>
+        <Breadcrumbs>
+          {breadcrumbs}
+        </Breadcrumbs>
         {movie && 
           <Card
             radius={RADIUS_LARGE}

@@ -2,7 +2,7 @@ import { Card, Group, Stack, Text, Title, useMantineTheme } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks';
 import { IconStarFilled } from '@tabler/icons-react';
 import moment from 'moment';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import {
   CARD_IMAGE_HEIGHT,
@@ -26,11 +26,13 @@ type MovieCardProps = {
 }
 
 export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
+
   const [opened, { open, close }] = useDisclosure();
   const router = useRouter();
   const [ratedList, setRatedList] = useState<MovieType[]>([]);
   const [rating, setRating] = useState(0);
   const theme = useMantineTheme();
+  const pathname = usePathname();
 
 
   useEffect(() => {
@@ -56,7 +58,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
     if((event.target as Element).tagName === 'BUTTON') {
       return;
     }
-    router.push(`${movie.id}`);
+    router.push(`${pathname}/${movie.id}`);
   };
 
   const onSaveRating = (rating: number) => {
