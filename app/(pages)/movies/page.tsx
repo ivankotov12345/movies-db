@@ -136,7 +136,7 @@ export default function MoviesPage() {
             size='md'
             label='Sort by'
             data={SORT_OPTIONS}
-            defaultValue='popularity.asc'
+            defaultValue='popularity.desc'
             withCheckIcon={false}
             rightSection={<IconChevronDown />}
             onChange={handleSortChange}
