@@ -25,7 +25,7 @@ import { default as NextImage } from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Context } from '@app/(pages)/context/context';
 import {
   CARD_IMAGE_HEIGHT,
@@ -42,7 +42,6 @@ import {
   SPACING_MAX
 } from '@app/constants/constants';
 import { transformDuration, transformReleaseDate, transformVoteCount } from '@app/helpers/format';
-import { getStorageItem } from '@app/helpers/storage';
 import { ApiPaths } from '@app/types/enums/api-paths';
 import { Paths } from '@app/types/enums/paths';
 import { MovieResponseType, MovieType, VideoDataType } from '@app/types/types/response-types';
@@ -59,7 +58,6 @@ export default function Movie() {
 
   const theme = useMantineTheme();
   const [movie, setMove] = useState<MovieResponseType>();
-  const [ratedList, setRatedList] = useState<MovieType[]>([]);
   const [rating, setRating] = useState(0);
   const [releaseYear, setReleseYear] = useState<string>();
   const [tableData, setTableData] = useState<TableRowtype[]>();
@@ -69,6 +67,11 @@ export default function Movie() {
   const [opened, { open, close }] = useDisclosure();
   const { isBurgerOpen, setIsBurgerOpen } = useContext(Context);
   const { width } = useViewportSize();
+
+  const ratedMoviesArr = useMemo<MovieType[]>(() => {
+    const ratedMovies = localStorage.getItem('rated_movies');
+    return ratedMovies !== null ? JSON.parse(ratedMovies) : [];
+  }, []);
 
   const router = useRouter();
 
@@ -94,10 +97,6 @@ export default function Movie() {
     }
   }, [id, catalog, router]);
 
-  useEffect(() => {
-    const currentRatedList = getStorageItem();
-    setRatedList(currentRatedList);
-  }, []);
 
   useEffect(() => {
     getMovieData();
@@ -131,6 +130,16 @@ export default function Movie() {
   ));
 
   useEffect(() => {
+    const rated = ratedMoviesArr.find(
+      (ratedMovie: MovieType) => ratedMovie.original_title === movie?.original_title
+    );
+
+    if (rated?.my_rating) {
+      setRating(rated.my_rating);
+    }
+  }, [movie, ratedMoviesArr]);
+
+  useEffect(() => {
     if(movie) {
       const genres = movie.genres.map((genre) => genre.name).join(', ');
       const year = moment(movie.release_date).format('YYYY');
@@ -149,24 +158,15 @@ export default function Movie() {
     }
   }, [movie]);
 
-  useEffect(() => {
-    const rated = ratedList.find(
-      (ratedMovie: MovieType) => ratedMovie.original_title === movie?.original_title
-    );
-
-    if (rated?.my_rating) {
-      setRating(rated.my_rating);
-    }
-  }, [movie, ratedList]);
 
   const onSaveRating = (rating: number) => {
     if(movie) {
-      const index = ratedList.findIndex((ratedMovie: MovieType) => ratedMovie.id === +id);
+      const index = ratedMoviesArr.findIndex((ratedMovie: MovieType) => ratedMovie.id === +id);
 
       if(index !== -1) {
-        ratedList[index].my_rating = rating;
+        ratedMoviesArr[index].my_rating = rating;
       } else {
-        ratedList.push({
+        ratedMoviesArr.push({
           id: +id,
           poster_path: movie.poster_path,
           genre_ids: movie.genres.map((genre) => genre.id),
@@ -177,7 +177,7 @@ export default function Movie() {
           my_rating: rating,
         });
       }
-      localStorage.setItem('rated_movies', JSON.stringify(ratedList));
+      localStorage.setItem('rated_movies', JSON.stringify(ratedMoviesArr));
     }
   };
 
@@ -186,7 +186,12 @@ export default function Movie() {
   };
 
   return (
-    <Container component='main' maw={DESCRIPTION_MAX_WIDTH} py={10}>
+    <Container
+      component='main'
+      maw={DESCRIPTION_MAX_WIDTH}
+      px={width >= LAYOUT_MAX_WIDTH_MOBILE ? 10 : 0}
+      py={width >= LAYOUT_MAX_WIDTH_MOBILE ? 10 : 0}
+    >
       <LoadingOverlay
         visible={isLoading}
         zIndex={1000}
@@ -220,8 +225,8 @@ export default function Movie() {
                 <Poster
                   src={`${ApiPaths.IMAGE_BASE_URL}${movie.poster_path}`}
                   alt={movie.original_title}
-                  width={width <= LAYOUT_MAX_WIDTH_MOBILE ? POSTER_IMAGE_WIDTH : CARD_IMAGE_WIDTH}
-                  height={width <= LAYOUT_MAX_WIDTH_MOBILE ? POSTER_IMAGE_HEIGHT: CARD_IMAGE_HEIGHT}
+                  width={width >= LAYOUT_MAX_WIDTH_MOBILE ? POSTER_IMAGE_WIDTH : CARD_IMAGE_WIDTH}
+                  height={width >= LAYOUT_MAX_WIDTH_MOBILE ? POSTER_IMAGE_HEIGHT: CARD_IMAGE_HEIGHT}
                 />
 
                 <Stack justify='space-between' h={SPACING_MAX}>

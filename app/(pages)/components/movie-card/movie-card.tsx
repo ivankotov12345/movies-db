@@ -15,7 +15,6 @@ import {
   SPACING_MAX
 } from '@app/constants/constants';
 import { transformVoteCount } from '@app/helpers/format';
-import { getStorageItem } from '@app/helpers/storage';
 import { ApiPaths } from '@app/types/enums/api-paths';
 import { GenreType, MovieType } from '@app/types/types/response-types';
 import { ModalRating } from '../modal-rating/modal-rating';
@@ -25,30 +24,26 @@ import { RatingButton } from '../rating-button';
 type MovieCardProps = {
   movie: MovieType,
   genres: GenreType[],
+  ratedMoviesArr: MovieType[],
 }
 
-export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
+export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres, ratedMoviesArr }) => {
   const { width } = useViewportSize();
 
   const [opened, { open, close }] = useDisclosure();
   const router = useRouter();
-  const [ratedList, setRatedList] = useState<MovieType[]>([]);
   const [rating, setRating] = useState(0);
   const theme = useMantineTheme();
   const pathname = usePathname();
 
 
-  useEffect(() => {
-    const currentRatedList = getStorageItem();
-    setRatedList(currentRatedList);
-  }, []);
 
   useEffect(() => {
-    const rated = ratedList && ratedList.find((ratedMovie: MovieType) => ratedMovie.id === movie.id);
+    const rated = ratedMoviesArr && ratedMoviesArr.find((ratedMovie: MovieType) => ratedMovie.id === movie.id);
     if (rated?.my_rating) {
       setRating(rated.my_rating);
     }
-  }, [ratedList, movie]);
+  }, [ratedMoviesArr, movie]);
 
   const releaseYear = moment(movie.release_date).format('YYYY');
 
@@ -65,12 +60,12 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
   };
 
   const onSaveRating = (rating: number) => {
-    const index = ratedList.findIndex((ratedMovie: MovieType) => ratedMovie.id === movie.id);
+    const index = ratedMoviesArr.findIndex((ratedMovie: MovieType) => ratedMovie.id === movie.id);
 
     if(index !== -1) {
-      ratedList[index].my_rating = rating;
+      ratedMoviesArr[index].my_rating = rating;
     } else {
-      ratedList.push({
+      ratedMoviesArr.push({
         id: movie.id,
         poster_path: movie.poster_path,
         genre_ids: movie.genre_ids,
@@ -81,8 +76,9 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, genres }) => {
         my_rating: rating,
       });
     }
-    localStorage.setItem('rated_movies', JSON.stringify(ratedList));
+    localStorage.setItem('rated_movies', JSON.stringify(ratedMoviesArr));
   };
+  
 
   return (
     <Fragment>

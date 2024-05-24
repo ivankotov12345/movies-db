@@ -12,6 +12,7 @@ import { CustomPagination } from '../components/custom-pagination';
 import { EmptyList } from '../components/empty-list';
 import { Header } from '../components/header';
 import { MoviesList } from '../components/movies-list';
+import { NoRatedmovies } from '../components/no-rated-movies';
 
 import styles from './page.module.scss';
 
@@ -68,6 +69,11 @@ export default function RatedPage() {
     setItems(moviesList.slice(from, to));
   }, [page, moviesList]);
 
+  if(ratedMoviesArr.length === 0) {
+    return (
+      <NoRatedmovies />
+    );
+  }
   return (
     <Fragment>
       <Header>
@@ -97,7 +103,7 @@ export default function RatedPage() {
           />
         </Group>
       </Header>
-      {moviesList.length > 0 && searchValue !== ''
+      {moviesList.length > 0
         ? (
           <Fragment>
             <Box component='main' mih={450}>
@@ -117,7 +123,6 @@ export default function RatedPage() {
           <EmptyList />
         )       
       }
-
     </Fragment>
   );
 }

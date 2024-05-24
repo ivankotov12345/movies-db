@@ -1,14 +1,14 @@
 import { Button, Center, Image, Stack, Title } from '@mantine/core';
 import { default as NextImage } from 'next/image';
 import Link from 'next/link';
-import { FONT_WEIGHT_LOGO } from '@app/constants/constants';
+import { FONT_WEIGHT_LOGO, SPACING_MAX } from '@app/constants/constants';
 import { Paths } from '@app/types/enums/paths';
 
 import noRated from '@public/assets/png/no-rated.png';
 
 export const NoRatedmovies: React.FC = () => {
   return (
-    <Center>
+    <Center h={SPACING_MAX}>
       <Stack align='center'>
         <Image
           component={NextImage}
